@@ -1,5 +1,5 @@
 FROM centos:7
-
+RUN mkdir -p /usr/src/app1
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
