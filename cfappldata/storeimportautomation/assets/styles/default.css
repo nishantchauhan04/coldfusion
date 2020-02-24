@@ -1,0 +1,829 @@
+@font-face{
+font-family: ‘Font Name’;
+src: url(path/to/font/file.ttf)
+}
+
+body {
+	margin: 2px 2px 2px 2px;
+	padding: 0px 0px 0px 0px;
+}
+
+form {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+object {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+/* Named selectors */
+#header {
+	width: 100%;
+	height: 36px;
+	background-color: #FFFFFF;
+	padding: 0px 0px 0px 2px;
+} 
+
+#loggedinuser {
+	float: right;
+	vertical-align: middle;
+	text-align: right;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #3E66AF;
+}
+
+#logo {
+	float: left;
+}
+
+#mainmenu {
+	float: left;
+	width: 160px;
+	height: 100%;
+	padding: 0px 0px 0px 0px;
+	background-color: #FFFFFF;
+}
+
+#pagebody {
+	float: left;
+	padding: 0px 0px 0px 4px;
+	margin: 0px 0px 0px 0px;
+	text-align: left;
+}
+
+#slicer {
+	height: 20px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	cursor: pointer;
+}
+/* End named selectors */
+
+/* Pop-up window classes */
+.appPanel {
+	background-color: #D4D0C8;
+	border-style: outset;
+	border-width: 2px;
+	border-color: #FFFFFF;
+	margin: 0px;
+	padding: 3px;
+	text-align: left;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	font-weight: normal;
+	width: 582px;
+}
+
+.appPanelGroup {
+	margin: 15px 0px 0px 0px;
+	padding: 5px;
+	border-width: 2px;
+	border-color: #FFFFFF;
+	border-style: groove;
+	width: 99%;
+}
+
+.appPanelGroupLabel {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	font-weight: normal;
+	white-space: nowrap;
+	background-color: #D4D0C8;
+	position: relative;
+	margin-top: -18px;
+	padding: 4px;
+	width: 1%;
+}
+
+.appGroup {
+	margin: 15px 0px 0px 0px;
+	padding: 5px;
+	border-width: 2px;
+	border-color: #FFFFFF;
+	border-style: groove;
+	width: 99%;
+}
+
+.appGroupLabel {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	font-weight: normal;
+	white-space: nowrap;
+	background-color: #FFFFFF;
+	position: relative;
+	margin-top: -18px;
+	padding: 4px;
+	width: 1%;
+}
+	
+.appLabel {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	font-weight: normal;
+}
+
+.appText {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	font-weight: bold;
+	padding-top: 7px;
+}
+
+.appButton {
+	font-size: 11px;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	background-color: #D4D0C8;
+	border-color: #FFFFFF;
+	border-width: 1px;
+	padding: 1px 6px 1px 6px;
+}
+
+.appScrollable {
+	background-color: #FFFFFF;
+	margin: 3px;
+	padding: 0px;
+	overflow-y: scroll;
+	overflow-x: auto;
+	border-width: 2px;
+	border-color: #FFFFFF;
+	border-style: inset;
+}
+
+.appTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+}
+
+.appSubtitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 26px;
+	color: #969390;
+	font-weight: bold;
+}
+
+.appSpacer {
+	font-size: 1px;
+	color: #D4D0C8;
+}
+
+a.appLink { color: #000099; }
+a.appLink:link { color: #000099; }
+a.appLink:active { color: #990000; }
+a.appLink:visited { color: #000099; }
+a.appLink:hover { color: #6666CC; }
+/* End pop-up window classes */
+
+/* Tabs */
+#tabheader {
+    float:left;
+    width:100%;
+    /*background:#FFFFFF url("/assets/images/bg.gif")
+     repeat-x bottom;*/
+    font-size:93%;
+    line-height:normal;
+    }
+
+#tabheader ul {
+    margin:0;
+    padding:0;
+	padding:10px 10px 0;
+    list-style:none;
+    }
+#tabheader li {
+    float:left;
+    background:url("/assets/images/tableft.gif")
+      no-repeat left top;
+    margin:0;
+    padding:0 0 0 7px;
+    }
+#tabheader a, #header strong, #header span {
+	color:FFFFFF;
+	text-decoration: none; font-weight:bold;
+    display:block;
+    background:url("/assets/images/tabright.gif")
+      no-repeat right top;
+    padding:5px 15px 4px 6px;
+    }
+#tabheader a:hover {text-decoration: none; font-weight:bold; color:FFFF00;}
+
+
+
+#tabheader #current {
+    background-image:url("/assets/images/tableft.gif");
+    }
+#tabheader #current a {
+    background-image:url("/assets/images/tabright.gif");
+    padding-bottom:5px;
+    }
+			
+/*.tab {
+	height: 18px;
+	width: 110px;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	padding: 1px 4px 1px 4px;
+	cursor: pointer;
+	background-color: #666666;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.tabselected {
+	height: 18px;
+	width: 110px;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #D4D0C8;
+	padding: 1px 4px 1px 4px;
+	cursor: pointer;
+	background-color: #D4D0C8;
+	font-weight: bold;
+	color: #000000;
+}
+
+
+.tabspacer {
+	height: 18px;
+	width: 1px;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	border-bottom: 1px solid;
+	border-color: #000000;
+	font-size: 1px;
+}
+
+.tabrule {
+	height: 20px;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	border-bottom: 1px solid;
+	border-color: #000000;
+	font-size: 1px;
+}
+
+#tabcontainer {
+	margin: 0px;
+	padding: 0px;
+}
+
+#tabcontents {
+	border: 1px solid #333333;
+	margin: -1px 0px 0px 0px;
+	padding: 10px 4px 8px 4px;
+}
+
+#tabnav {
+    width: 365px; 
+	height: 30px;
+	background: url("../images/tabsprites.gif");
+	background-repeat: no-repeat;
+    margin: 0px; 
+	padding: 0px;
+    position: relative;
+}
+	
+#tabnav li {
+	margin: 0px; 
+	padding: 0px; 
+	list-style: none;
+	position: absolute; 
+	top: 0px;
+}
+
+#tabnav li, #tabnav a {
+	height: 30px; 
+	display: block;
+}
+
+#tabaction {
+	left: 0px;
+	width: 120px;
+}
+
+#tabmy {
+	left: 120px;
+	width: 120px;
+}
+
+#tabteam {
+	left: 240px;
+	width: 120px;
+}
+
+#tabaction.selected {
+	background: transparent url("../images/tabsprites.gif") 0px -60px no-repeat;
+}
+
+#tabmy.selected {
+	background: transparent url("../images/tabsprites.gif") -120px -60px no-repeat;
+}
+
+#tabteam.selected {
+	background: transparent url("../images/tabsprites.gif") -240px -60px no-repeat;
+}*/
+
+/*#tabaction a:hover {
+	background: transparent url("../images/tabsprites.gif") 0px -30px no-repeat;
+}
+
+#tabmy a:hover {
+	background: transparent url("../images/tabsprites.gif") -120px -30px no-repeat;
+}
+
+#tabteam a:hover {
+	background: transparent url("../images/tabsprites.gif") -240px -30px no-repeat;
+}*/
+
+#tabsurveynav {
+    width: 365px; 
+	height: 30px;
+    margin: 0px; 
+	padding: 0px;
+    position: relative;
+}
+	
+#tabsurveynav li {
+	margin: 0px; 
+	padding: 0px; 
+	list-style: none;
+	position: absolute; 
+	top: 0px;
+}
+
+#tabsurveynav li, #tabsurveynav a {
+	height: 30px; 
+	display: block;
+}
+
+#tabprofile {
+	left: 0px;
+	width: 120px;
+	background: transparent url("../images/userprofilesprites.gif") 0px 0px no-repeat;
+}
+
+#tabsurvey {
+	left: 120px;
+	width: 120px;
+	background: transparent url("../images/surveyquestionssprites.gif") 0px 0px no-repeat;
+}
+
+#tabmgr {
+	left: 240px;
+	width: 120px;
+	background: transparent url("../images/managerinputsprites.gif") 0px 0px no-repeat;
+}
+
+#tabintrvwfrm {
+	left: 360px;
+	width: 120px;
+	background: transparent url("../images/interviewformsprites.gif") 0px 0px no-repeat;
+}
+
+#tablrnplan {
+	left: 480px;
+	width: 120px;
+	background: transparent url("../images/learningplansprites.gif") 0px 0px no-repeat;
+}
+
+#tabprofile.selected, #tabprofile.selected a:hover {
+	background: transparent url("../images/userprofilesprites.gif") 0px -60px no-repeat;
+}
+
+#tabsurvey.selected, #tabsurvey.selected a:hover {
+	background: transparent url("../images/surveyquestionssprites.gif") 0px -60px no-repeat;
+}
+
+#tabmgr.selected, #tabmgr.selected a:hover {
+	background: transparent url("../images/managerinputsprites.gif") 0px -60px no-repeat;
+}
+
+#tabintrvwfrm.selected, #tabintrvwfrm.selected a:hover {
+	background: transparent url("../images/interviewformsprites.gif") 0px -60px no-repeat;
+}
+
+#tablrnplan.selected, #tablrnplan.selected a:hover {
+	background: transparent url("../images/learningplansprites.gif") 0px -60px no-repeat;
+}
+
+/*#tabprofile a:hover {
+	background: transparent url("../images/userprofilesprites.gif") 0px -30px no-repeat;
+}
+
+#tabsurvey a:hover {
+	background: transparent url("../images/surveyquestionssprites.gif") 0px -30px no-repeat;
+}
+
+#tabmgr a:hover {
+	background: transparent url("../images/managerinputsprites.gif") 0px -30px no-repeat;
+}
+
+#tabintrvwfrm a:hover {
+	background: transparent url("../images/interviewformsprites.gif") 0px -30px no-repeat;
+}
+
+#tablrnplan a:hover {
+	background: transparent url("../images/learningplansprites.gif") 0px -30px no-repeat;
+}*/
+
+/* End tabs */
+
+/* Divs */
+div {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+	padding: 0px 0px 0px 0px;
+}
+
+div.panel {
+	border: 2px outset;	
+	border-left: thin solid #CCCCCC;
+	padding: 0px 0px 0px 0px;
+	background-color: #ffffff;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+div.paneltitle {
+	height: 20px;
+	background-color: #3E66AF;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	vertical-align: middle;
+}
+
+div.panelcontents {
+	padding: 10px 6px 10px 6px;
+	background-color: #FFFFFF;
+	font-size: 12px;
+	color: #000000;
+}
+
+div.pagesection {
+	border: 1px solid #000000;
+	padding: 4px 4px 4px 4px;
+}
+
+div.pagesectiontitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #3E66AF;
+}
+
+div.pagesectiontitleblk {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+}
+
+div.successmsg {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #006600;
+}
+
+div.pagetitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #3E66AF;
+}
+
+div.pagetitlegreen {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #006600;
+}
+
+div.pagetitleyellow {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFF66;
+}
+
+div.pagetitleblack {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+}
+
+div.failuremsg {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #CC0000;
+}
+
+div.errormsg {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #CC0000;
+}
+/* End divs */
+
+
+/* Spans */
+span.heading {
+	font-weight: bold;
+}
+/* End span classes */
+
+
+/* Table classes */
+table.grid {
+	border: 1px solid #88adda;
+	padding: 2px 6px 2px 6px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+table.grid tr {
+	background-color: #FFFFFF;
+}
+
+table.grid tr.hover {
+	background-color: #dce7f3;
+}
+
+table.grid tr.selected {
+	background-color: #88adda;
+	color: #FFFFFF;
+}
+
+table.grid tr.odd {
+	background-color: #F0F0F0;
+}
+
+table.grid th {
+	height: 20px;
+	border: 1px solid #88adda;
+	padding: 2px 4px 2px 4px;
+	background-color: #dce7f3;
+	font-weight: bold;
+	text-align: left;
+}
+
+table.grid td {
+	border: 1px solid #88adda;
+	padding: 2px 4px 2px 4px;
+}
+
+table.grid td a {
+	color: #3e66af;
+}
+
+
+
+
+table {
+	margin: 2px 0px 2px 0px;
+	border-collapse: collapse;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+}
+
+table tr.odd1 {
+	background-color: #F0F0F0;
+}
+
+table td.spacer {
+	font-size: 1px;
+	height: 5px;
+}
+
+table.gray th {
+	background-color: #D4D0C8;
+	border: 1px solid #000000;
+	border-collapse: collapse;
+	margin: 0px 0px 0px 0px;
+	padding: 2px 6px 3px 6px; 
+	white-space: nowrap;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+	text-align: left;
+}
+
+table.gray td {
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+	margin: 0px 0px 0px 0px;
+	padding: 1px 2px 1px 2px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+table.details {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+table.details thead {
+	position: relative;
+	top: expression(document.getElementById("detailtable").scrollTop);
+	height: 13px;
+	padding: 1px 4px 1px 4px;
+	background-color: #D4D0C8;
+	border: 2px outset;
+}
+
+table.details thead th {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;	
+	text-align: left;
+}
+
+/* Links */
+a, a:active, a:visited {
+	color: #3e66af;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a.button {
+	background: transparent url("../images/buttonsprites.png") 0px 0px no-repeat;
+	color: #000000;
+	font-size: 12px;
+	font-weight: bold;
+	height: 26px;
+	padding: 5px 6px 5px 6px;
+	text-align: center;
+	text-decoration: none;
+	width: 100px;
+}
+
+a.button:hover {
+	background: transparent url("../images/buttonsprites.png") 0px -26px no-repeat;
+	color: #000000;
+	text-decoration: none;
+}
+
+a.button:active {
+	background: transparent url("../images/buttonsprites.png") 0px -52px no-repeat;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+/* End links */
+
+/* End table classes */
+
+
+.fieldcontent2
+{
+	font-family: Verdana, Arial, Helvetica;
+	font-weight: none;
+	font-size: 12px;
+}
+
+.fieldcontent2b
+{
+	font-family: Verdana, Arial, Helvetica;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+
+.fieldtitle10t
+{
+	font-family: Verdana, Arial, Helvetica;
+	font-weight: none;
+	font-size: 10px;
+}
+
+.fielderror {
+	font-weight: none;
+	font-size: 12px;
+}
+.fieldtitle {
+	font-weight: bold;
+	font-size: 12px;
+}
+.fieldtitle10b {
+	font-weight: bold;
+	font-size: 10px;
+}
+
+.fieldtitle10 {
+	font-weight: none;
+	font-size: 10px;
+}
+
+.fieldtitle11 {
+	font-family: Verdana, Arial, Helvetica;
+	font-weight: none;
+	font-size: 11px;
+}
+
+.fieldtitle12n {
+	font-weight: none;
+	font-size: 10px;
+}
+
+.fieldtitle12 {
+	font-weight: none;
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.fieldtitle12b {
+	font-weight: bold;
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.fieldtitlewhite {
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 12px;
+}
+
+.fieldtitlewhitebig {
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 14px;
+}
+
+.fieldtitle10white {
+	font-weight: bold;
+	color: #FFFFFF;
+	font-size: 10px;
+}
+
+.fieldtitleyellow {
+	font-weight: bold;
+	color: #FFFF00;
+	font-size: 12px;
+}
+
+.inputboxes {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+.inputboxesred {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FF0000;
+}
+
+.inputboxessmall {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #000000;
+}
+
+
+.hidden {
+	visibility: hidden;
+	display: none;
+}
+
+div#qTip {
+ padding: 3px;
+ border: 1px solid #666;
+ border-right-width: 2px;
+ border-bottom-width: 2px;
+ display: none;
+ background: #999;
+ color: #FFF;
+ font: bold 9px Verdana, Arial, sans-serif;
+ text-align: left;
+ position: absolute;
+ z-index: 1000;
+}

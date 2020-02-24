@@ -1,0 +1,267 @@
+<cfcomponent>
+	<cfheader name="Access-Control-Allow-Origin" value="*" />
+
+	<cfset this.name = "storeimportautomation">
+    <cfset this.Sessionmanagement = "True">
+    <cfset RealTime = #CreateODBCDateTime(Now())#>
+    <cfset truetime = "#DateFormat(RealTime, "YYYY-MM-DD")# #TimeFormat(RealTime, "HH:MM:SS")#">
+	<cfset application.tamUrl = "http://localhost:8500/cfappldata/storeimportautomation">
+	
+	<cffunction name="get" access="remote" returntype="any">
+		<cfargument name="font" type="string" required="true">
+		<cfsetting showDebugOutput="No">
+		<cfscript>
+			if (font eq "icomoon") var fn = "IcoMoon-Free.ttf";
+			setCORSHeaders([                // See function in original question
+				"http://localhost:8500"
+			]);
+			var filePath = ExpandPath("fonts/icomoon/#fn#");
+		</cfscript>
+		<cfheader name="Content-Disposition" value="attachment; filename=#fn#">
+		<cfcontent file="#filePath#" type="font/ttf">
+	</cffunction>
+
+	<!---<cfif (CGI.HTTP_HOST EQ "giantintranetuat.aholdusa.com" AND CGI.SCRIPT_NAME EQ "/cfappldata/storeimportautomation/assets/scheduledtasks/expired.html") OR 
+	(CGI.HTTP_HOST EQ "giantintranetdev.aholdusa.com" AND CGI.SCRIPT_NAME EQ "/cfappldata/storeimportautomation/assets/scheduledtasks/expired.html") OR 
+	(CGI.HTTP_HOST EQ "giantintranetsf13.aholdusa.com:9087" AND CGI.SCRIPT_NAME EQ "/cfappldata/storeimportautomation/assets/scheduledtasks/expired.html") OR
+	(CGI.HTTP_HOST EQ "giantintranetsf14.aholdusa.com:9087" AND CGI.SCRIPT_NAME EQ "/cfappldata/storeimportautomation/assets/scheduledtasks/expired.html") OR 
+	(CGI.HTTP_HOST EQ "giantintranet.aholdusa.com" AND CGI.SCRIPT_NAME EQ "/cfappldata/storeimportautomation/assets/scheduledtasks/expired.html")>        
+    <cfelse>--->
+	
+
+        <!--- Application startup actions --->
+        <cffunction name="onApplicationStart">
+            <!--- Set application variables which differ by application version (find by server name) 
+            <cfset CurrentServer = CGI.PATH_TRANSLATED>
+            <cfif FindNoCase("cell_cfdv", CGI.PATH_TRANSLATED) GT 0 OR FindNoCase("node_cf001d", CGI.PATH_TRANSLATED) GT 0>
+                <cfset application.version = "development">
+                <cfset application.tamUrl = "http://localhost:8500/cfappldata/storeimportautomation">
+                <cfset application.fileuploadurl = "http://g0adcwebapp1.aholdusa.com/cfappldata/fileupload/fileupload.cfc">
+                <cfset application.unsecureUrl = "http://localhost:8500/cfappldata/storeimportautomation">
+                <cfset application.logoffUrl = "http://tamdevws.aholdusa.com/pkmslogout">
+            <cfelseif FindNoCase("cell_cfqa", CGI.PATH_TRANSLATED) GT 0 OR FindNoCase("node_cf001q", CGI.PATH_TRANSLATED) GT 0>
+                <cfset application.version = "uat">
+                <cfset application.tamUrl = "https://tamqaws.aholdusa.com/jginetuatnew/cfappldata/storeimportautomation">
+                <cfset application.fileuploadurl = "http://g0adcwebapp1.aholdusa.com/cfappldata/fileupload/fileupload.cfc">
+                <cfset application.unsecureUrl = "http://giantintranetuatnew.aholdusa.com/cfappldata/storeimportautomation">
+                <cfset application.logoffUrl = "http://tamqaws.aholdusa.com/pkmslogout">
+            <cfelse>
+                <cfset application.version = "production">
+                <cfset application.tamUrl = "http://localhost:8500/cfappldata/cfappldata/storeimportautomation">
+                <cfset application.fileuploadurl = "http://g0adcwebapp1.aholdusa.com/cfappldata/fileupload/fileupload.cfc">
+                <cfset application.unsecureUrl = "http://localhost:8500/cfappldata/cfappldata/storeimportautomation">
+                <cfset application.logoffUrl = "https://ws1.aholdusa.com/pkmslogout">
+            </cfif>
+            --->
+
+            <!--- Set application URL --->
+            <cfset application.appurl = "/cfappldata/storeimportautomation"><!--- & "/cfappldata/storeimportautomation"--->
+            
+            <!--- Set application availability --->
+            <cfset application.availability = "Available">
+        
+            <!--- Set datasources --->
+            <cfset datasources = StructNEW()>
+            <cfset StructInsert(datasources, "appDbUW", "unitedway")>
+            <cfset StructInsert(datasources, "appDbWMF", "WMF")>
+            <cfset StructInsert(datasources, "appDbsync", "AholdSyncDb")> 
+            <cfset StructInsert(datasources, "appDb2MainFrame", "db2_mainframe")>
+             
+             
+          
+            <cflock scope="application" timeout="10">
+                <cfset application.datasources = datasources>
+                <!---<cfset application.dbSchema = dbSchema>--->
+            </cflock>   
+            
+            <cfreturn true>
+        </cffunction>
+    
+        <!--- End application startup actions --->
+        
+        <!--- Set server data file directory 
+        <cfif NOT IsDefined('application.filedir')>
+            <cfset CurrentServer = CGI.PATH_TRANSLATED>
+            <cfset CurrentServer = ListDeleteAt(CurrentServer, ListLen(CurrentServer, '/'), '/')>
+            <cfset CurrentServer = ListDeleteAt(CurrentServer, ListLen(CurrentServer, '/'), '/')>
+            <cfset FileDir = CurrentServer & '/data'>
+            <cfset application.filedir = FileDir>
+        </cfif>
+        --->
+        <!--- Session startup actions --->
+
+        <cffunction name="onSessionStart">
+            <cfif StructKeyExists(session, "cfid") AND (NOT StructKeyExists(cookie, "cfid") OR NOT StructKeyExists(cookie, "cftoken"))>
+            <cfcookie name="cfid" value="#session.cfid#" />
+            <cfcookie name="cftoken" value="#session.cftoken#" />
+            </cfif>
+            
+            <cfinclude template="assets/library/userauthorizationfunctions.cfm">	
+            <cfset session.user = StructNew()>
+                    
+            <cfif NOT ParameterExists(http_iv_user)>
+                <cfif IsDefined("url.reqPriKey")>
+                    <cfoutput>
+                        <cflocation url="#application.tamurl#/index.html?reqPriKey=#url.reqPriKey#" addtoken="no">
+                    </cfoutput>
+                <cfelse>
+                    <cflocation url="#application.tamurl#/index.html" addtoken="no">
+                </cfif>
+            <cfelse>
+                <cfset session.user = GetUserAuthorization(http_iv_user, http_opco, http_iv_groups)>
+                <cfif (session.user.opco EQ "Giant") OR (session.user.opco EQ "") OR (session.user.opco EQ "AFS")><cfset session.user.opco = "GC"></cfif>
+                <cfif left(session.user.opco, 4) EQ "Stop"><cfset session.user.opco = "NS"></cfif>
+            </cfif>	
+            
+            <cfif IsDefined("http_iv_groups")>
+                <cfif ListContainsNoCase(http_iv_groups, "giantcwebdev_admin") OR ListContainsNoCase(http_iv_groups, "str_import_admin") OR http_iv_user EQ "g00911a0">
+                    <cfset session.user.securityLVL = "admin">
+                <cfelseif ListContainsNoCase(http_iv_groups, "str_import_view") OR http_iv_user EQ "n00911a0">
+                    <cfset session.user.securityLVL = "view">
+                <cfelse>
+                    <cfset session.user.securityLVL = "denied">
+                </cfif>
+            <cfelse>
+                <cfset session.user.securityLVL = "denied">
+            </cfif>
+            
+            <cfset session.user.tamemail = http_mail>                      
+            <!---END SESSION ACCESS LEVEL--->
+        </cffunction>
+        
+    
+        <!--- End session startup actions --->
+            
+            
+        
+        <!--- Session end actions --->
+        <cffunction name="onSessionEnd">
+        
+            <cfloop collection="#session#" item="var">
+                <cfset StructDelete(session, var)>
+            </cfloop>
+            
+            <cfcookie name="CFID" expires="now">
+            <cfcookie name="CFTOKEN" expires="now">
+    
+        
+        </cffunction>
+        <!--- End session end actions --->
+            
+        
+        <!--- Page request actions --->
+        <cffunction name="onRequest">
+            <cfargument name="RequestedPage" required="yes">
+    
+            <!--- Check if application is being accessed through TAM --->
+            <cfif NOT ParameterExists(http_iv_user) AND (FindNoCase(arguments.RequestedPage, "remoting") EQ 0)>
+                <cflocation url="#application.tamurl#" addtoken="no">
+            </cfif> 
+            <cfif NOT IsDefined("session.user.globalid")>
+                <cfset onSessionStart()>
+            </cfif>
+            
+            <!---<cfinclude template="assets/library/functions.cfm">--->
+    
+            <cfsavecontent variable="pageContent">
+                <cfinclude template="#arguments.RequestedPage#">
+            </cfsavecontent>	
+            
+            <html>
+            <head>
+            <title>Ahold USA Store Import Automation<cfif IsDefined("pageName")><cfoutput> - #pageName#</cfoutput></cfif></title>
+            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+            <basefont face="Verdana, Arial, Helvetica, sans-serif">
+            
+            <cfif IsDefined("session.user.securityLVL") AND session.user.securityLVL EQ "denied">            
+                <table width="100%" align="center" class="cube" border=0 cellspacing=0 cellpadding=2>
+                    
+                    <tr>
+                    <td height="25" class="fieldheading2" align="center" valign="middle">
+                        <div class="errormsg" style="font-size:24px; color:#FF0000;"><img src="assets/images/denied.jpg" align="absmiddle">&nbsp;&nbsp;&nbsp;Access Denied!</div>
+                        <br />
+                        <div class="fielderror" style="font-size:14px; font-weight:bold; margin-left:10px;">
+                        You currently do not have access to the Store Import Automation Web Application<cfabort>
+                        <br /><br />       
+                    </td>
+                    </tr>    
+                </table>
+            </cfif>
+            
+            
+            <cfif NOT IsDefined("hideAllCSS")>
+                <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                    <link rel="stylesheet" type="text/css" href="../assets/styles/default.css">
+                    <link rel="stylesheet" type="text/css" href="../assets/styles/menu.css">        
+                    <link rel="stylesheet" type="text/css" href="../assets/styles/toolbar.css">
+                <cfelse>
+                    <link rel="stylesheet" type="text/css" href="assets/styles/default.css">
+                    <link rel="stylesheet" type="text/css" href="assets/styles/menu.css">        
+                    <link rel="stylesheet" type="text/css" href="assets/styles/toolbar.css">
+                </cfif>
+            </cfif>
+            <cfif NOT IsDefined("hideAllaeroCSS")>
+                <link rel="stylesheet" href="assets/styles/xtheme-aero.css"/>
+                <!---<link rel="stylesheet" href="/CFIDE/scripts/ajax/ext/resources/css/ytheme-aero.css"/>--->
+            </cfif>
+            <cfif IsDefined("cssFiles") AND IsArray(cssFiles)>
+                <cfloop from="1" to="#ArrayLen(cssFiles)#" index="cssIdx">
+                    <cfoutput><link rel="stylesheet" type="text/css" href="#cssFiles[cssIdx]#"></cfoutput>
+                </cfloop>
+            </cfif>
+            <!---<script language="javascript" type="text/javascript" src="assets/scripts/default.js"></script>--->
+            <cfif IsDefined("jsFiles") AND IsArray(jsFiles)>
+                <cfloop from="1" to="#ArrayLen(jsFiles)#" index="jsIdx">
+                    <cfoutput><script language="javascript" type="text/javascript" src="#jsFiles[jsIdx]#"></script></cfoutput>
+                </cfloop>
+            </cfif>
+            </head>
+            
+            <body <cfif IsDefined("bodyOnLoadJs")>onLoad="<cfoutput>#bodyOnLoadJs#</cfoutput>"</cfif>>
+            <cfif NOT IsDefined("hideHeader")>
+                <div id="header" style="width:91%">
+                    <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                        <div id="logo"><a href="../welcome.html"><img src="../assets/images/storeimportautomation.gif" align="middle" alt="Store Import Automation" border="0"></a></div>
+                    <cfelse>
+                        <div id="logo"><a href="welcome.html"><img src="assets/images/storeimportautomation.gif" align="middle" alt="Store Import Automation" border="0"></a></div>
+                    </cfif>
+                    <cfif IsDefined("session.user")>
+                    <cfif NOT IsDefined("hideAllMenus")>
+                        <div id="loggedinuser"><cfoutput>Logged in as: #session.user.firstName# <!---#session.user.middleInit#---> #session.user.lastName#</cfoutput>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        </cfif>
+                    </cfif>
+                </div>
+            </cfif>
+            <div style="padding: 2px 2px 2px 2px;">
+            <cfif NOT IsDefined("hideAllMenusExcel")>
+                <cfif IsDefined("adminMenu") AND adminMenu EQ "admin">
+                    <cfinclude template="assets/includes/adminmenu.html">
+                <cfelseif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                        <cfinclude template="assets/includes/dirappmenu.html">
+                <cfelseif IsDefined("adminMenu") AND adminMenu EQ "reports">
+                        <cfinclude template="assets/includes/reportsmenu.html">
+                <cfelseif NOT IsDefined("hideAllMenus")>
+                        <cfinclude template="assets/includes/menu.html">
+                </cfif>
+            </cfif>
+            </div>
+            <div id="pagebody" style="width:80%">
+                <cfoutput>#pageContent#</cfoutput>
+            </div>
+            </body>
+            </html>
+        </cffunction>
+        <!--- End page request actions --->
+        
+        
+        
+        <!--- Error actions
+        <cffunction name="onError">
+            <cfargument name="Exception" required=true/>
+            <cfargument name="EventName" type="String" required=true/>
+            
+        </cffunction>
+        End error actions --->
+    
+	<!---</cfif>--->
+</cfcomponent>

@@ -1,0 +1,178 @@
+/* MainMenu styles */
+div #menu {
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	clear: both;
+	float: left;
+	padding:0px;
+	margin: 4px 2px 0px 0px;
+} 
+
+div #menu div.titlemainbottom {
+	background-color: #3e66af;
+	background-position: 99% 2px;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid #3e66af;
+	height:5px;
+	padding: 0px;
+	width: 300px;
+}
+
+div #menu div.titlemain {
+	background-color: #3e66af;
+	background-position: 99% 2px;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid #cccccc;
+	color: #ffffff;
+	cursor: pointer;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0px;
+	width: 300px;
+}
+
+div #menu div.titlemain div {
+	padding: 2px 6px 2px 2px;
+	color: #FFFFFF;
+}
+
+/*div #menu div.titleclosedmain {
+	background-color: #3e66af;
+	background-image: url("../images/downarroworange.gif");
+	background-position: 99% 2px;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid #cccccc;
+	color: #ffffff;
+	cursor: pointer;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	height: 21px;
+	overflow-y: hidden;
+	padding: 0px;
+	width: 300px;
+}
+
+div #menu div.titleclosedmain div {
+	padding: 2px 6px 2px 2px;
+	color: #FFFFFF;
+}*/
+
+div #menu div.titlemain div.subtitlemain {
+	background-color: #cccccc;
+	color: #000000;
+	cursor: default;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 2px 6px 2px 6px;	
+}
+
+div #menu a {
+	background-color: #ffffff;
+	border-bottom: 1px solid #cccccc;
+	border-collapse: collapse;
+	color: #000000;
+	display: block;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	padding: 2px 6px 2px 10px;
+	text-decoration: none;
+}
+
+div #menu a:hover {
+	background-color: #dce7f3;
+	background-image: url("../images/link.gif");
+	background-position: 97% 50%;
+	background-repeat: no-repeat;
+	text-decoration: underline;
+}
+/* End mainmenu styles */
+
+
+/* Admin Menu styles */
+div #menu {
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	clear: both;
+	float: left;
+	padding:0px;
+	margin: 4px 2px 0px 0px;
+} 
+
+div #menu div.title {
+	background-color: #3e66af;
+	background-image: url("../images/uparroworange.gif");
+	background-position: 99% 2px;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid #cccccc;
+	color: #ffffff;
+	cursor: pointer;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0px;
+	width: 300px;
+}
+
+div #menu div.title div {
+	padding: 2px 6px 2px 2px;
+	color: #FFFFFF;
+}
+
+div #menu div.titleclosed {
+	background-color: #3e66af;
+	background-image: url("../images/downarroworange.gif");
+	background-position: 99% 2px;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid #cccccc;
+	color: #ffffff;
+	cursor: pointer;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	height: 21px;
+	overflow-y: hidden;
+	padding: 0px;
+	width: 300px;
+}
+
+div #menu div.titleclosed div {
+	padding: 2px 6px 2px 2px;
+	color: #FFFFFF;
+}
+
+div #menu div.title div.subtitle {
+	background-color: #cccccc;
+	color: #000000;
+	cursor: default;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	width:100%;
+	padding: 2px 6px 2px 6px;	
+}
+
+div #menu a {
+	background-color: #ffffff;
+	border-bottom: 1px solid #cccccc;
+	border-collapse: collapse;
+	color: #000000;
+	display: block;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	padding: 2px 6px 2px 10px;
+	text-decoration: none;
+}
+
+div #menu a:hover {
+	background-color: #dce7f3;
+	background-image: url("../images/link.gif");
+	background-position: 97% 50%;
+	background-repeat: no-repeat;
+	text-decoration: underline;
+}
+/* End admin menu styles */

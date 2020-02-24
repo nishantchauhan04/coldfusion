@@ -1,0 +1,85 @@
+<cfset cssFiles[1] = "assets/styles/default.css"> 
+
+<cfset jsFiles = ArrayNew(1)>
+<head>
+</head>
+<cfinvoke component="assets/functions/reports" method="storeNumberInfo" returnvariable="storeNumberInfoData">
+	<cfif IsDefined("form.storenum") AND form.storenum NEQ "ALL">
+    	<cfinvokeargument name="storenum" value="#form.storenum#">
+    <cfelse>
+    	<cfinvokeargument name="allcards" value="allcards">
+    </cfif>
+</cfinvoke>
+
+<cfinvoke component="assets/functions/reports" method="supportMerchantInfo" returnvariable="supportMerchantInfoData">
+	<cfinvokeargument name="merchtype" value="list">
+</cfinvoke>
+
+<body>             
+<div class="panel" style="width:98%">
+	<div class="paneltitle" style="padding: 2px 2px 2px 2px;">&nbsp;Ahold USA Store Import Automation</div>
+    	<cfoutput>
+        <form action="merchantids_excel.html" method="post" name="exportForm">
+            <input type="hidden" name="action" value="export">
+            <input type="hidden" name="storenum" value="#form.storenum#">
+        </form>
+        <!--start include for the toolbar which contains date/time and log off button--->
+        <cfinclude template="assets/includes/toolbar.html">
+        <!--end include for the toolbar which contains date/time and log off button--->
+ 		<div class="pagetitle" style="margin-left:15px; margin-top:10px;">Store Merchant ID's</div>
+        <div class="pagetitle" style="margin-left:15px; margin-top:10px;">Results - <font color="##006600">#storeNumberInfoData.RecordCount# records</font>&nbsp;&nbsp;
+        <cfif IsDefined("storeNumberInfoData.recordcount") AND storeNumberInfoData.recordcount GTE "1">
+            <a href="##" onClick="document.exportForm.submit(); return false;"><img src="assets/images/excel_icon.gif" border="0" />&nbsp;Export to Excel</a>&nbsp;
+        </cfif>
+        </div>   
+        </cfoutput>
+        
+        <table width="98%" border="0">
+        <tr>
+        <td> 
+        <cfif IsDefined("storeNumberInfoData.recordcount") AND storeNumberInfoData.recordcount GTE "1">
+        <div style="margin-left:15px; margin-top:10px; margin-bottom:10px;">       	
+            <table width="95%" align="left" border="1" cellspacing="0" cellpadding="3" bordercolor="CCCCCC" style="margin-top:10px;">  
+                <tr bgcolor="#DCE7F3">
+                  <td class="fieldcontent2b" align="center">Store Number</td>
+                  <td class="fieldcontent2b" align="center">Merchant Type</td>
+                  <td class="fieldcontent2b" align="center">Third Party Processor</td>
+                  <td class="fieldcontent2b" align="center">Card Code</td>
+                  <td class="fieldcontent2b" align="center">Merchant ID 1</td>
+                  <td class="fieldcontent2b" align="center">Merchant ID 2</td>
+                  <td class="fieldcontent2b" align="center">Date</td>
+                </tr>
+            
+            	<cfoutput query="storeNumberInfoData">
+                 <tr>                          
+                  <td class="fieldcontent2" align="center">#storeNumberInfoData.f_storenum#</td>
+                  <td class="fieldcontent2" align="center">#storeNumberInfoData.f_merchtype#</td>
+                  <td class="fieldcontent2" align="center">
+                  <cfquery name="MerchantName" dbtype="query">
+                  SELECT f_merchtypedesc
+                  FROM supportMerchantInfoData
+                  WHERE UPPER(f_cardcodes) = <cfqueryparam value="#Trim(UCASE(storeNumberInfoData.f_cardcode))#" cfsqltype="cf_sql_varchar">
+                  </cfquery>
+                  #MerchantName.f_merchtypedesc#
+                                  
+                  </td>
+                  <td class="fieldcontent2" align="center">#storeNumberInfoData.f_cardcode#</td>
+                  <td class="fieldcontent2" align="center">#storeNumberInfoData.f_merchid1#</td>
+                  <td class="fieldcontent2" align="center">#storeNumberInfoData.f_merchid2#</td>   
+                  <td class="fieldcontent2" align="center">#DateFormat(storeNumberInfoData.f_date, "mm/dd/yyyy")#</td>  
+                </tr>
+            	</cfoutput>
+            </table>
+        </div>
+        </cfif>	
+        </td>
+        </tr>
+        <tr>
+        	<td height="10px"></td>
+        </tr>
+        </table>	
+</div>
+</form>
+</body>
+
+
