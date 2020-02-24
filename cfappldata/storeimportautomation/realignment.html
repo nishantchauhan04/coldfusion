@@ -1,0 +1,82 @@
+<cfset hideMenu = "yes">
+<cfset hideAllMenus = "yes">
+<cfset hideHeader = "yes">
+<cfset hideAllCSS = "yes">
+<cfset cssFiles = "yes">
+<cfset hideAllaeroCSS = "yes">
+un-comment to run
+<!---change Datasource to "unitedway_prod" on night of cutover and remove cfabort tag
+<cfabort>--->
+<!---Datasources:
+PROD 
+<cfset verDS = "unitedway_prod">--->
+<!---DEV = unitedway---> 
+<cfset verDS = "unitedway_prod">
+
+<!---<cfquery name="grabData" datasource="UnitedWay">
+select store, district, region
+from WMF.TBL_DISTRICTATTRIBUTE
+order by store,district,region
+</cfquery>
+
+<cfoutput query="grabData">--->
+	<!---#grabData.F_DISTRICTNUM# #grabData.F_OPCOID# #grabData.F_CHAINID# #grabData.F_STORESTATUS# #grabData.F_FACGROUP#
+    #grabData.F_DISTRICTNAME# #grabData.F_REGIONNAME# #grabData.F_CHAINNAME# #grabData.F_DIVISIONCODE# #grabData.F_DIVISIONNAME#
+    #grabData.F_DISTRICTMGRNM# #grabData.F_DISTRICTMGRUID# #grabData.F_DISTRICTMGREMAIL#<br />
+    
+    change Datasource to "unitedway_prod" on night of cutover--->
+    <!--- RUN for TBL_DISTRICTATTRIBUTE_NEW as well--->
+<!---    <cfquery name="qInsrt" datasource="#verDS#">
+    INSERT INTO WMF.TBL_DISTRICTATTRIBUTE (F_PRIKEY,
+    F_DISTRICTNUM,
+    F_OPCOID,
+    F_CHAINID,
+    F_STORESTATUS,
+    F_FACGROUP,
+    F_DISTRICTNAME,
+    F_REGIONNAME,
+    F_CHAINNAME,
+    F_DIVISIONCODE,
+    F_DIVISIONNAME,
+    F_DISTRICTMGRNM,
+    F_DISTRICTMGRUID,
+    F_DISTRICTMGREMAIL)
+    
+    VALUES (WMF.TBLDISTRICTATTRIBUTE.NEXTVAL,
+    '#grabData.F_DISTRICTNUM#',
+    '#grabData.F_OPCOID#',
+    '#grabData.F_CHAINID#',
+    '#grabData.F_STORESTATUS#',
+    '#grabData.F_FACGROUP#',
+    '#grabData.F_DISTRICTNAME#',
+    '#grabData.F_REGIONNAME#',
+    '#grabData.F_CHAINNAME#',
+    '#grabData.F_DIVISIONCODE#',
+    '#grabData.F_DIVISIONNAME#',
+    '#grabData.F_DISTRICTMGRNM#',
+    '#grabData.F_DISTRICTMGRUID#',
+    '#grabData.F_DISTRICTMGREMAIL#')
+    </cfquery>    
+    
+</cfoutput>--->
+
+
+
+<!---UPDATING LIAISON DEPT APP--->
+<!---<CFQUERY NAME="selStore" DATASOURCE="unitedway_prod">
+select store, district, region
+from WMF.TBL_STORE_REALIGN
+order by store,district,region
+</CFQUERY>
+
+<cfoutput query="selStore">    
+    <CFQUERY NAME="updStore" DATASOURCE="#verDS#">
+    UPDATE grc.tbl_resolutioncenter
+    SET F_STOREDISTRICT = <cfqueryparam value="#selStore.district#" cfsqltype="cf_sql_varchar" maxlength="4">
+    WHERE F_STORENUMBER = <cfqueryparam value="#selStore.store#" cfsqltype="cf_sql_varchar" maxlength="4">
+    AND F_SUBMITDATE >= '01-JAN-15'
+	AND F_OPCO = 'Giant'
+    </CFQUERY>
+</cfoutput>
+
+DONE--->

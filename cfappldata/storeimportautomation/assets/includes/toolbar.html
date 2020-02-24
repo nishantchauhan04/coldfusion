@@ -1,0 +1,47 @@
+
+<cfoutput>
+	<cfset application.appurl = "http://localhost:8500/cfappldata/storeimportautomation">
+    <div class="toolbar">
+        <table width="" border=0>
+            <tr>
+                <td class="fieldtitle10" align="left" width="33%">&nbsp;
+                <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                    <img src="../assets/images/today.gif" alt="Current date and time" align="absmiddle" />&nbsp;#DateFormat(Now(), "DDDD MMMM DD, YYYY")# #TimeFormat(Now(), "h:mm tt")#&nbsp;
+                <cfelse>
+                    <img src="assets/images/today.gif" alt="Current date and time" align="absmiddle" style="vertical-align:middle;" />&nbsp;#DateFormat(Now(), "DDDD MMMM DD, YYYY")# #TimeFormat(Now(), "h:mm tt")#&nbsp;
+                </cfif>
+                </td>
+            
+                <td class="fieldtitle10" align="center" width="32%">&nbsp;
+                <cfif NOT IsDefined("hideAllMenus")>
+                    <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                        <cfif IsDefined("application.version") AND application.version EQ "Production">
+                            <label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:006600;">#UCASE(application.version)#</label>
+                        <cfelse>
+                            <label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:FF0000;">TEST</label>
+                        </cfif>
+                    <cfelse>
+                        <cfif IsDefined("application.version") AND application.version EQ "Production">
+                            <label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:006600;">#UCASE(application.version)#</label> 
+                        <cfelse>
+                            <label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:FF0000;">TEST</label>
+                        </cfif>
+                    </cfif>
+                </cfif>
+                </td>
+            
+                <td class="fieldtitle10" align="right" width="32%">&nbsp;
+                <cfif NOT IsDefined("hideAllMenus")>
+                    <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                        <img src="../assets/images/logout.gif" alt="Click to log off" align="absmiddle" border="0" style="cursor: pointer; vertical-align:middle" onClick="location.href='#application.appurl#/logoff.html'" />
+                        <a href="#application.appurl#/logoff.html" style="cursor: pointer;"><font style="color:##000000; font-weight:bold">Log Out</font></a>&nbsp;&nbsp;                        
+                    <cfelse>
+                        <img src="assets/images/logout.gif" alt="Click to log off" align="absmiddle" border="0" style="cursor: pointer; vertical-align:middle" onClick="location.href='#application.appurl#/logoff.html'"  />
+                        <a href="#application.appurl#/logoff.html" style="cursor: pointer;"><font style="color:##000000; font-weight:bold">Log Out</font></a>&nbsp;&nbsp;
+                    </cfif>
+                </cfif>
+                </td>
+            </tr>
+        </table>       
+    </div>
+</cfoutput>

@@ -1,0 +1,219 @@
+<cfset hideMenu = "yes">
+<cfset hideAllMenus = "yes">
+<cfset hideHeader = "yes">
+<cfset hideAllCSS = "yes">
+<cfset cssFiles = "yes">
+
+<cfinvoke component="assets/functions/functions" method="storeMid" returnvariable="storeMidData">
+	<cfinvokeargument name="storenum" value="#TRIM(form.storenumber)#">
+</cfinvoke>
+    
+<cftransaction>    
+    <!---START STORE INFO UPDATE/INSERT FORM--->
+    <cfif storeMidData.recordcount GTE "1">
+        <cftry>
+            <cfquery name="updStoreInfo" datasource="#application.datasources.appDbUW#">
+            UPDATE wmf.tbl_sia_storeinfo
+            SET f_submitdate = <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">,
+            f_submituser = <cfqueryparam value="#TRIM(session.user.tamid)#" cfsqltype="cf_sql_varchar" maxlength="10">,
+            f_storename = <cfqueryparam value="#TRIM(form.divisionname)#" cfsqltype="cf_sql_varchar" maxlength="30">,
+            f_country = <cfqueryparam value="840" cfsqltype="cf_sql_varchar" maxlength="5">,
+            f_fuel = <cfqueryparam value="#TRIM(form.fuelyn)#" cfsqltype="cf_sql_char" maxlength="1">,
+            f_merchtype = <cfqueryparam value="5411" cfsqltype="cf_sql_varchar" maxlength="5">,
+            f_division = <cfqueryparam value="#TRIM(form.division)#" cfsqltype="cf_sql_varchar" maxlength="1">,
+            f_flagged = <cfqueryparam value="Y" cfsqltype="cf_sql_char" maxlength="1">,
+            f_flagdate = <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">,
+            <cfif form.reqType EQ "U">
+                f_recordtype = <cfqueryparam value="US" cfsqltype="cf_sql_char" maxlength="2">
+            <cfelseif form.reqType EQ "N">
+                f_recordtype = <cfqueryparam value="AS" cfsqltype="cf_sql_char" maxlength="2">
+            <cfelseif form.reqType EQ "C">
+                f_recordtype = <cfqueryparam value="CS" cfsqltype="cf_sql_char" maxlength="2">
+            </cfif>
+            WHERE f_storenum = <cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">
+            </cfquery>
+        <cfcatch type="any">
+            Cannot update request form - updStoreInfo<cfdump var="#cfcatch#"><cfabort>
+        </cfcatch>
+        </cftry>
+    <cfelse>
+        <cftry>
+            <cfquery name="insStoreInfo" datasource="#application.datasources.appDbUW#">
+            INSERT INTO wmf.tbl_sia_storeinfo(f_storenum,
+            f_submitdate, 
+            f_submituser, 
+            f_storename, 
+            f_country, 
+            f_fuel,
+            f_merchtype, 
+            f_division, 
+            f_flagged, 
+            f_flagdate, 
+            f_recordtype)
+            
+            VALUES(<cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">,
+            <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">,
+            <cfqueryparam value="#TRIM(session.user.tamid)#" cfsqltype="cf_sql_varchar" maxlength="10">,
+            <cfqueryparam value="#TRIM(form.divisionname)#" cfsqltype="cf_sql_varchar" maxlength="30">,
+            <cfqueryparam value="840" cfsqltype="cf_sql_varchar" maxlength="5">,
+            <cfqueryparam value="#TRIM(form.fuelyn)#" cfsqltype="cf_sql_char" maxlength="1">,
+            <cfqueryparam value="5411" cfsqltype="cf_sql_varchar" maxlength="5">,
+            <cfqueryparam value="#TRIM(form.division)#" cfsqltype="cf_sql_varchar" maxlength="1">,
+            <cfqueryparam value="Y" cfsqltype="cf_sql_char" maxlength="1">,
+            <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">,                
+            <cfif form.reqType EQ "U">
+                <cfqueryparam value="US" cfsqltype="cf_sql_char" maxlength="2">
+            <cfelseif form.reqType EQ "N">
+                <cfqueryparam value="AS" cfsqltype="cf_sql_char" maxlength="2">
+            <cfelseif form.reqType EQ "C">
+                <cfqueryparam value="CS" cfsqltype="cf_sql_char" maxlength="2">
+            </cfif>)
+            </cfquery>
+        <cfcatch type="any">
+            Cannot Insert request form - insStoreInfo<cfdump var="#cfcatch#"><cfabort>
+        </cfcatch>
+        </cftry>
+    </cfif>
+    <!---END STORE INFO UPDATE/INSERT FORM--->
+    
+    <!---GRAB FORM FIELD NAMES--->
+    <cfinvoke component="assets/functions/functions" method="formFields" returnvariable="formFieldsData">
+    	<cfif form.fuelyn EQ "N">
+        	<cfinvokeargument name="merchtype" value="5411">
+        </cfif>
+    </cfinvoke>
+    
+    <cfif form.fuelyn EQ "N">
+        <!---UPDATE RECORD WITH DELETE CARD "DC" CODE--->
+        <cfquery name="delCardTypeData" datasource="#application.datasources.appDbUW#">
+            UPDATE wmf.tbl_sia_cardtype_data
+            SET f_date = <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">,
+            f_cardtype = <cfqueryparam value="DC" cfsqltype="cf_sql_varchar" maxlength="2">,
+            f_flagged = <cfqueryparam value="Y" cfsqltype="cf_sql_char" maxlength="1">
+            WHERE f_storenum = <cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">
+            AND f_merchtype = <cfqueryparam value="5542" cfsqltype="cf_sql_varchar" maxlength="4">                           
+        </cfquery>
+        <!---END UPDATE RECORD WITH DELETE CARD "DC" CODE--->
+    </cfif>
+    
+    <!---LOOP THRU FORM FIELDS TO INSERT OR UPDATE CARD DATA--->
+    <cfoutput query="formFieldsData">
+        <cfif form.reqType EQ "C">
+        	<!---UPDATE RECORD WITH DELETE CARD "DC" CODE--->
+            <cfquery name="delCardTypeData" datasource="#application.datasources.appDbUW#">
+                UPDATE wmf.tbl_sia_cardtype_data
+                SET f_merchid1 = <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname)#" cfsqltype="cf_sql_varchar" maxlength="30">
+                <cfif IsDefined("formFieldsData.f_fieldname2") AND formFieldsData.f_fieldname2 NEQ "">
+                    , f_merchid2 = <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname2)#" cfsqltype="cf_sql_varchar" maxlength="20">
+                </cfif>
+                , f_date = <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">
+                , f_cardtype = <cfqueryparam value="DC" cfsqltype="cf_sql_varchar" maxlength="2">
+                , f_flagged = <cfqueryparam value="Y" cfsqltype="cf_sql_char" maxlength="1">
+                WHERE f_storenum = <cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">
+                AND f_merchtype = <cfqueryparam value="#TRIM(formFieldsData.f_merchtype)#" cfsqltype="cf_sql_varchar" maxlength="4">
+                AND f_cardcode = <cfqueryparam value="#TRIM(formFieldsData.f_cardcode)#" cfsqltype="cf_sql_varchar" maxlength="2">                            
+            </cfquery>
+        <cfelse>                               
+            <!---CHECK IF CARD DATA EXISTS--->
+            <cfinvoke component="assets/functions/functions" method="storePosCardType" returnvariable="storePosCardTypeData">
+                <cfinvokeargument name="storenum" value="#TRIM(form.storenumber)#">
+                <cfinvokeargument name="merchtype" value="#TRIM(formFieldsData.f_merchtype)#">
+                <cfinvokeargument name="cardcode" value="#TRIM(formFieldsData.f_cardcode)#">
+                <cfinvokeargument name="allcards" value="allcards">
+            </cfinvoke>
+                
+            <!---ID RECOD EXISTS, UPDATE--->
+            <cfif storePosCardTypeData.recordcount GTE "1">
+                <cfif form.reqType EQ "N"> 
+                    <!---UPDATE RECORD WITH ADD CARD "AC" CODE--->
+                    <cfquery name="delCardTypeData" datasource="#application.datasources.appDbUW#">
+                        UPDATE wmf.tbl_sia_cardtype_data
+                        SET f_merchid1 = <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname)#" cfsqltype="cf_sql_varchar" maxlength="30">
+                        <cfif IsDefined("formFieldsData.f_fieldname2") AND formFieldsData.f_fieldname2 NEQ "">
+                            , f_merchid2 = <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname2)#" cfsqltype="cf_sql_varchar" maxlength="20">
+                        </cfif>
+                        , f_date = <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">
+                        , f_cardtype = <cfqueryparam value="AC" cfsqltype="cf_sql_varchar" maxlength="2">
+                        , f_flagged = <cfqueryparam value="Y" cfsqltype="cf_sql_char" maxlength="1">
+                        WHERE f_storenum = <cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">
+                        AND f_merchtype = <cfqueryparam value="#TRIM(formFieldsData.f_merchtype)#" cfsqltype="cf_sql_varchar" maxlength="4">
+                        AND f_cardcode = <cfqueryparam value="#TRIM(formFieldsData.f_cardcode)#" cfsqltype="cf_sql_varchar" maxlength="2">                            
+                    </cfquery>
+                <cfelseif form.reqType EQ "U">
+                    <cfset fldVal_org = Evaluate('form.' & formFieldsData.f_fieldname_org)>
+                    <cfset fldVal = Evaluate('form.' & formFieldsData.f_fieldname)>                    
+                    
+                    <cfif Compare(fldVal_org, fldVal) EQ "1" OR Compare(fldVal_org, fldVal) EQ "-1">
+                        <!---UPDATE RECORD WITH UPDATE CARD "UC" CODE--->
+                        <cfquery name="updCardTypeData" datasource="#application.datasources.appDbUW#">
+                            UPDATE wmf.tbl_sia_cardtype_data
+                            SET f_merchid1 = <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname)#" cfsqltype="cf_sql_varchar" maxlength="30">
+                            <cfif IsDefined("formFieldsData.f_fieldname2") AND formFieldsData.f_fieldname2 NEQ "">
+                                , f_merchid2 = <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname2)#" cfsqltype="cf_sql_varchar" maxlength="20">
+                            </cfif>
+                            , f_date = <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">
+                            , f_cardtype = <cfqueryparam value="UC" cfsqltype="cf_sql_varchar" maxlength="2">
+                            , f_flagged = <cfqueryparam value="Y" cfsqltype="cf_sql_char" maxlength="1">
+                            WHERE f_storenum = <cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">
+                            AND f_merchtype = <cfqueryparam value="#TRIM(formFieldsData.f_merchtype)#" cfsqltype="cf_sql_varchar" maxlength="4">
+                            AND f_cardcode = <cfqueryparam value="#TRIM(formFieldsData.f_cardcode)#" cfsqltype="cf_sql_varchar" maxlength="2">                            
+                        </cfquery>
+                    </cfif>
+                </cfif>
+            <cfelse>
+                <cfif (Evaluate('form.' & formFieldsData.f_fieldname) NEQ "") OR (IsDefined("formFieldsData.f_fieldname2") AND formFieldsData.f_fieldname2 NEQ "")>
+                    <cfquery name="insCardTypeData" datasource="#application.datasources.appDbUW#">
+                        INSERT INTO wmf.tbl_sia_cardtype_data(f_storenum, f_merchtype, f_cardcode, f_merchid1, f_merchid2, f_date, f_cardtype, f_flagged)
+                        VALUES(<cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">,
+                        <cfqueryparam value="#TRIM(formFieldsData.f_merchtype)#" cfsqltype="cf_sql_varchar" maxlength="4">,
+                        <cfqueryparam value="#TRIM(formFieldsData.f_cardcode)#" cfsqltype="cf_sql_varchar" maxlength="2">,
+                        <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname)#" cfsqltype="cf_sql_varchar" maxlength="30">,
+                        <cfif IsDefined("formFieldsData.f_fieldname2") AND formFieldsData.f_fieldname2 NEQ "">
+                            <cfqueryparam value="#Evaluate('form.' & formFieldsData.f_fieldname2)#" cfsqltype="cf_sql_varchar" maxlength="20">,
+                        <cfelse>
+                            <cfqueryparam value="" cfsqltype="cf_sql_varchar" maxlength="20">,
+                        </cfif>
+                        <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">,
+                        <cfqueryparam value="AC" cfsqltype="cf_sql_varchar" maxlength="2">,
+                        <cfqueryparam value="Y" cfsqltype="cf_sql_char" maxlength="1">)
+                    </cfquery> 
+                </cfif>               
+            </cfif>
+        </cfif>
+    </cfoutput>
+    <!---END CARD DATA UPDATE--->                                 
+    
+    <!---START INSERT LOG FILE RECORD--->
+    <cftry>
+        <cfquery name="insLogFile" datasource="#application.datasources.appDbUW#">
+        INSERT INTO wmf.tbl_sia_logfile(f_prikey,
+        f_datetime,
+        f_tamid,
+        f_name,
+        f_notes,
+        f_storenum)
+        
+        VALUES(wmf.tbl_sia_logfile_seq.NEXTVAL,
+        <cfqueryparam value="#CreateODBCDateTime(now())#" cfsqltype="cf_sql_timestamp">,
+        <cfqueryparam value="#TRIM(session.user.tamid)#" cfsqltype="cf_sql_varchar" maxlength="10">,
+        <cfqueryparam value="#TRIM(session.user.firstname)# #TRIM(session.user.lastname)#" cfsqltype="cf_sql_varchar" maxlength="40">,
+        <cfif form.reqType EQ "U">
+            <cfqueryparam value="Updated" cfsqltype="cf_sql_varchar" maxlength="20">,
+        <cfelseif form.reqType EQ "N">
+            <cfqueryparam value="Setup" cfsqltype="cf_sql_varchar" maxlength="20">,
+        <cfelseif form.reqType EQ "C">
+            <cfqueryparam value="Closed" cfsqltype="cf_sql_char" maxlength="20">,
+        </cfif>
+        <cfqueryparam value="#TRIM(form.storenumber)#" cfsqltype="cf_sql_numeric" maxlength="4">)       
+        </cfquery>
+    <cfcatch type="any">
+        Cannot Insert into log file - insLogFile<cfdump var="#cfcatch#"><cfabort>
+    </cfcatch>
+    </cftry>
+    <!---END INSERT LOG FILE RECORD--->
+</cftransaction>
+
+<cfoutput>
+	<cflocation url="store_setup.html?msg=#form.reqType#&strnum=#TRIM(form.storenumber)#">
+</cfoutput>
+

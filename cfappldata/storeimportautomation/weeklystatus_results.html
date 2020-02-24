@@ -1,0 +1,66 @@
+<cfset cssFiles[1] = "assets/styles/default.css"> 
+
+<cfset jsFiles = ArrayNew(1)>
+<head>
+</head>
+<cfinvoke component="assets/functions/reports" method="weeklyStatusInfo" returnvariable="weeklyStatusInfoData">
+	<cfinvokeargument name="argStartDate" value="#form.reqStartdate#">
+    <cfinvokeargument name="argEndDate" value="#form.reqEnddate#">
+</cfinvoke>
+
+<body>             
+<div class="panel" style="width:98%">
+	<div class="paneltitle" style="padding: 2px 2px 2px 2px;">&nbsp;Ahold USA Store Import Automation</div>
+    	<cfoutput>
+        <form action="weeklystatus_excel.html" method="post" name="exportForm">
+            <input type="hidden" name="action" value="export">
+            <input type="hidden" name="reqStartdate" value="#form.reqStartdate#">
+            <input type="hidden" name="reqEnddate" value="#form.reqEnddate#">
+        </form>
+        <!--start include for the toolbar which contains date/time and log off button--->
+        <cfinclude template="assets/includes/toolbar.html">
+        <!--end include for the toolbar which contains date/time and log off button--->
+ 		<div class="pagetitle" style="margin-left:15px; margin-top:10px;">Weekly Status Report</div>
+        <div class="pagetitle" style="margin-left:15px; margin-top:10px;">Results - <font color="##006600">#weeklyStatusInfoData.RecordCount# records</font>&nbsp;&nbsp;
+        <cfif IsDefined("weeklyStatusInfoData.recordcount") AND weeklyStatusInfoData.recordcount GTE "1">
+            <a href="##" onClick="document.exportForm.submit(); return false;"><img src="assets/images/excel_icon.gif" border="0" />&nbsp;Export to Excel</a>&nbsp;
+        </cfif>
+        </div>   
+        </cfoutput>
+        
+        <table width="98%" border="0">
+        <tr>
+        <td> 
+        <cfif IsDefined("weeklyStatusInfoData.recordcount") AND weeklyStatusInfoData.recordcount GTE "1">
+        <div style="margin-left:15px; margin-top:10px; margin-bottom:10px;">       	
+            <table width="95%" align="left" border="1" cellspacing="0" cellpadding="3" bordercolor="CCCCCC" style="margin-top:10px;">  
+                <tr bgcolor="#DCE7F3">
+                  <td class="fieldcontent2b" align="center">Store Number</td>
+                  <td class="fieldcontent2b" align="center">Activity</td>
+                  <td class="fieldcontent2b" align="center">Date/Time</td>
+                  <td class="fieldcontent2b" align="center">Submit Name</td>	
+                </tr>
+            
+            	<cfoutput query="weeklyStatusInfoData">
+                 <tr>                          
+                  <td class="fieldcontent2" align="center">#weeklyStatusInfoData.f_storenum#</td>
+                  <td class="fieldcontent2" align="center">#TRIM(weeklyStatusInfoData.f_notes)#</td>
+                  <td class="fieldcontent2" align="center">#DateFormat(weeklyStatusInfoData.f_datetime, "mm/dd/yyyy")# #TimeFormat(weeklyStatusInfoData.f_datetime, "hh:mm tt")#</td>  
+                  <td class="fieldcontent2" align="center">#TRIM(weeklyStatusInfoData.f_name)#</td>  
+                  
+                </tr>
+            	</cfoutput>
+            </table>
+        </div>
+        </cfif>
+        </td>
+        </tr>
+        <tr>
+        	<td height="10px"></td>
+        </tr>
+        </table>		
+</div>
+</form>
+</body>
+
+

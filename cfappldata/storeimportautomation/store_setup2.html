@@ -1,0 +1,445 @@
+<cfset cssFiles[1] = "assets/styles/default.css"> 
+
+<cfset jsFiles = ArrayNew(1)>
+<cfset ArrayAppend(jsFiles, "assets/scripts/required.js")>
+
+<head>
+</head>
+<cfinvoke component="assets/functions/functions" method="storeMid" returnvariable="storeMidData">
+	<cfinvokeargument name="storenum" value="#TRIM(form.storenumber)#">
+</cfinvoke>
+
+<cfinvoke component="assets/functions/functions" method="storeDiv" returnvariable="storeDivData">
+	<cfif IsDefined("storeMidData.f_division") AND storeMidData.f_division NEQ "">
+    	<cfif TRIM(storeMidData.f_division) EQ "4">
+        	<cfinvokeargument name="division" value="SS"><---#TRIM(MID(storeMidData.f_storename, 15, 2))#--->
+        <cfelse>
+       	  <cfinvokeargument name="divisioncode" value="#TRIM(storeMidData.f_division)#">
+        </cfif>
+    <cfelse>
+    	<cfinvokeargument name="division" value="#TRIM(form.division)#">
+    </cfif>
+</cfinvoke>
+
+<cfinvoke component="assets/functions/functions" method="storeWMF" returnvariable="storeWMFData">
+	<cfinvokeargument name="storenum" value="#TRIM(form.storenumber)#">
+</cfinvoke>
+
+<cfinvoke component="assets/functions/functions" method="storePhone" returnvariable="storePhoneData">
+	<cfinvokeargument name="storenum" value="#TRIM(form.storenumber)#">
+</cfinvoke>
+
+<cfinvoke component="assets/functions/functions" method="supportData" returnvariable="supportDataCodes">
+	<cfinvokeargument name="merchtypedesc" value="POS">
+</cfinvoke>
+
+<cfinvoke component="assets/functions/functions" method="cardCodeDefaults" returnvariable="cardCodeDefaultsData">
+	<cfinvokeargument name="merchtype" value="5411">
+    <cfinvokeargument name="divisioncode" value="#TRIM(storeDivData.f_divisioncode)#">    
+</cfinvoke>
+
+<cfset pos_eb2 = "">
+<cfset pos_wc2 = "">
+<cfset pos_pv2 = "">
+<cfset pos_vc = "">
+<cfset fuel_vc = "">
+<cfset pos_bh = "">
+
+<cfoutput query="cardCodeDefaultsData"> 
+<cfswitch expression="#Trim(f_cardcode)#"> 
+    <cfcase value="EB"> 
+        <cfset pos_eb2 = cardCodeDefaultsData.f_merchid2>
+    </cfcase>
+    <cfcase value="WC"> 
+        <cfset pos_wc2 = cardCodeDefaultsData.f_merchid2>
+    </cfcase>
+    <cfcase value="PV"> 
+        <cfset pos_pv2 = cardCodeDefaultsData.f_merchid2>
+    </cfcase>
+    <cfcase value="VC"> 
+        <cfset pos_vc = cardCodeDefaultsData.f_merchid1>
+        <!---FUEL Valuelink number may be the same as POS--->
+        <cfset fuel_vc = cardCodeDefaultsData.f_merchid1>
+    </cfcase>
+    <cfcase value="BH"> 
+        <cfset pos_bh = cardCodeDefaultsData.f_merchid1>
+    </cfcase> 
+    <cfcase value="SB"> 
+        <cfset pos_sb = cardCodeDefaultsData.f_merchid1>
+    </cfcase>   
+</cfswitch> 
+</cfoutput> 
+
+<cfinvoke component="assets/functions/functions" method="storePosCardType" returnvariable="storePosCardTypeData">
+	<cfinvokeargument name="storenum" value="#TRIM(form.storenumber)#">
+    <cfinvokeargument name="merchtype" value="#TRIM(supportDataCodes.f_merchtype)#">
+    <cfinvokeargument name="cardcode" value="#TRIM(supportDataCodes.f_cardcodes)#">
+    <cfinvokeargument name="allcards" value="allcards">    
+</cfinvoke>
+
+<cfif NOT IsDefined("pos_pp")><cfset pos_pp = ""></cfif>
+<cfif NOT IsDefined("pos_eb")><cfset pos_eb = ""></cfif>
+<cfif NOT IsDefined("pos_sb")><cfset pos_sb = ""></cfif>
+<cfif NOT IsDefined("pos_ck")><cfset pos_ck = ""></cfif>
+<cfif NOT IsDefined("pos_wk")><cfset pos_wk = ""></cfif>
+<cfif NOT IsDefined("pos_wc")><cfset pos_wc = ""></cfif>
+<cfif NOT IsDefined("pos_w2")><cfset pos_w2 = ""></cfif>
+<cfif NOT IsDefined("pos_pv")><cfset pos_pv = ""></cfif>
+
+<cfoutput query="storePosCardTypeData"> 
+<cfswitch expression="#Trim(f_cardcode)#"> 
+    <cfcase value="PP"> 
+        <cfset pos_pp = storePosCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="EB"> 
+        <cfset pos_eb = storePosCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="SB"> 
+        <cfset pos_sb = storePosCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="CK"> 
+        <cfset pos_ck = storePosCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="WK"> 
+        <cfset pos_wk = storePosCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="WC"> 
+        <cfset pos_wc = storePosCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="W2"> 
+        <cfset pos_w2 = storePosCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="PV"> 
+        <cfset pos_pv = storePosCardTypeData.f_merchid1>
+    </cfcase>   
+</cfswitch> 
+</cfoutput> 
+
+<cfinvoke component="assets/functions/functions" method="supportData" returnvariable="supportDataCodes">
+	<cfinvokeargument name="merchtypedesc" value="FUEL">
+</cfinvoke>
+
+<cfinvoke component="assets/functions/functions" method="storePosCardType" returnvariable="storeFuelCardTypeData">
+	<cfinvokeargument name="storenum" value="#TRIM(form.storenumber)#">
+    <cfinvokeargument name="merchtype" value="#TRIM(supportDataCodes.f_merchtype)#">
+    <cfinvokeargument name="cardcode" value="#TRIM(supportDataCodes.f_cardcodes)#">
+    <cfinvokeargument name="allcards" value="allcards">
+</cfinvoke>
+
+<cfset fuel_pp = "">
+<cfset fuel_sb = "">
+
+<cfoutput query="storeFuelCardTypeData"> 
+<cfswitch expression="#Trim(f_cardcode)#"> 
+    <cfcase value="PP"> 
+        <cfset fuel_pp = storeFuelCardTypeData.f_merchid1>
+    </cfcase>
+    <cfcase value="SB"> 
+        <cfset fuel_sb = storeFuelCardTypeData.f_merchid1>
+    </cfcase>    
+</cfswitch> 
+</cfoutput> 
+
+<!--- Default the storeWMFData parameters --->
+<cfparam name="wmfStoreregion" default=""/>
+<cfparam name="wmfStoredistrict" default=""/>
+<cfparam name="wmfStoreaddress" default=""/>
+<cfparam name="wmfStoreaddress2" default=""/>
+<cfparam name="wmfStorecity" default=""/>
+<cfparam name="wmfStorestate" default=""/>
+<cfparam name="wmfStorezip" default=""/>
+<cfparam name="wmfPhonenum" default=""/>
+<cfparam name="wmfBusopendate" default=""/>
+<cfparam name="wmfBusclosedate" default=""/>
+
+
+<body>             
+<form id="storeMIDs" name="storeMIDs" action="store_setup_action.html" method="post" onSubmit="return storeMIDsReq();">
+<input type="hidden" name="HasChanges" value="false">
+<cfoutput>
+    <input type="hidden" name="reqType" value="#form.reqType#">
+    <input type="hidden" name="division" value="#storeDivData.f_divisioncode#">
+    <input type="hidden" name="divisionname" value="#storeDivData.f_divisionname# #storeMidData.f_storenum#">
+    <input type="hidden" name="storenumber" value="#storeWMFData.f_storenum#">
+    <cfif IsDefined("pos_eb2")><input type="hidden" name="pos_eb2" value="#pos_eb2#"></cfif>
+    <cfif IsDefined("pos_wc2")><input type="hidden" name="pos_wc2" value="#pos_wc2#"></cfif>
+    <cfif IsDefined("pos_pv2")><input type="hidden" name="pos_pv2" value="#pos_pv2#"></cfif>
+</cfoutput>
+
+<div class="panel" style="width:98%">
+	<div class="paneltitle" style="padding: 2px 2px 2px 2px;">&nbsp;Ahold USA Store Import Automation</div>
+    	<!--start include for the toolbar which contains date/time and log off button--->
+        <cfinclude template="assets/includes/toolbar.html">
+        <!--end include for the toolbar which contains date/time and log off button--->
+ 		<div class="pagetitle" style="margin-left:15px; margin-top:10px;">
+        	<cfif IsDefined("session.user.securityLVL") AND session.user.securityLVL EQ "Admin">
+                <cfif form.reqType EQ "N">New Store Set-Up:</cfif>
+                <cfif form.reqType EQ "U">Update Store Information:</cfif>
+                <cfif form.reqType EQ "C">Closing Store Information:</cfif>   
+            <cfelse>
+            	View Store Information
+            </cfif>
+            
+            <cfif IsDefined("storeWMFData.recordcount") AND storeWMFData.recordcount EQ "0">
+            	<div class="pagetitle" style="margin-left:15px; margin-top:10px; margin-bottom:20px; color:#FF0000">
+                	This store is not available in the Store Master file yet so no address information is available.
+                </div>
+            </cfif>
+        </div>
+        <cfif IsDefined("storeWMFData.recordcount") AND storeWMFData.recordcount GTE "1">
+            <cfset wmfStoreregion = storeWMFData.f_storeregion>
+            <cfset wmfStoredistrict = storeWMFData.f_storedistrict>
+            <cfset wmfStoreaddress = storeWMFData.f_storeaddress>
+            <cfset wmfStoreaddress2 = storeWMFData.f_storeaddress2>
+            <cfset wmfStorecity = storeWMFData.f_storecity>
+            <cfset wmfStorestate = storeWMFData.f_storestate>
+            <cfset wmfStorezip = storeWMFData.f_storezip>
+            <cfset wmfPhonenum = storePhoneData.f_phonenum>
+            <cfset wmfBusopendate = storeWMFData.f_busopendate>
+            <cfset wmfBusclosedate = storeWMFData.f_busclosedate>
+        
+
+            <cfoutput>        	
+                <table width="80%" border="0">
+                <tr>
+                <td width="40%" valign="top"> 
+                    <div style="margin-left:15px; margin-top:10px; font-size:12px;">
+                    <table width="100%" border="1" cellspacing="0" cellpadding="3" bordercolor="CCCCCC" align="left">
+                    <th colspan="2" bgcolor="##DCE7F3" align="left" height="25px" style="font-weight:bold;">&nbsp;Location Information</strong></th>
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Division:</td>
+                        <td>&nbsp;#storeDivData.f_divisionname#</td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Store Number:</td>
+                        <td>&nbsp;#storeWMFData.f_storenum#</td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Region:</td>
+                        <td>&nbsp;#wmfStoreregion#</td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;District:</td>
+                        <td>&nbsp;#wmfStoredistrict#</td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Address:</td>
+                        <td>&nbsp;#wmfStoreaddress#<cfif wmfStoreaddress2 NEQ ""><br />
+                        #wmfStoreaddress2#
+                        </cfif>
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;City/State/Zip:</td>
+                        <td>&nbsp;#wmfStorecity#, #wmfStorestate# #wmfStorezip#</td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Store Phone:</td>
+                        <td>&nbsp;#Left(wmfPhonenum, 3)#-#Mid(wmfPhonenum, 4, 3)#-#Right(wmfPhonenum, 4)#</td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" <cfif storeMidData.recordcount EQ "0">bgcolor="FFFF00"<cfelse>bgcolor="F0F0F0"</cfif>>&nbsp;<cfif storeMidData.recordcount EQ "0"><font style="color:##FF0000; font-weight:bold;">* </font></cfif>Fuel:</td>
+                        <td>&nbsp;<input type="radio" id="fuelyn1" name="fuelyn" value="Y" onClick="fuelDisplay()" <cfif storeMidData.f_fuel EQ "Y">checked</cfif>>&nbsp;Yes&nbsp;<input type="radio" id="fuelyn2" name="fuelyn" value="N"  onClick="fuelDisplay()" <cfif storeMidData.f_fuel EQ "N">checked</cfif>>&nbsp;No </td>
+                    </tr>
+                    
+                    </table>
+                    </div>                
+                </td>
+                
+                <td width="40%" valign="top"> 
+                    <div style="margin-left:15px; margin-top:10px; font-size:12px;">
+                    <table width="100%" border="1" cellspacing="0" cellpadding="3" bordercolor="CCCCCC" align="left">
+                    <th colspan="2" bgcolor="##DCE7F3" align="left" height="25px" style="font-weight:bold;">&nbsp;Open/Close</strong></th>
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Open Date:</td>
+                        <td>&nbsp;#DateFormat(wmfBusopendate, "mm/dd/yyyy")#</td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Close Date:</td>
+                        <td>&nbsp;#DateFormat(wmfBusclosedate, "mm/dd/yyyy")#</td>
+                    </tr>                    
+                    </table>
+                    </div>                
+                </td>
+                </tr>            
+                </table>
+                
+                <table width="80%" border="0">
+                <tr>
+                <td width="40%" valign="top"> 
+                    <div style="margin-left:15px; margin-top:10px; font-size:12px;">
+                    <table width="100%" border="1" cellspacing="0" cellpadding="3" bordercolor="CCCCCC">
+                    <th colspan="2" bgcolor="##DCE7F3" align="left" height="25px" style="font-weight:bold;">&nbsp;Merchant ID Numbers: POS</strong></th>
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;ChasePaymentech:</td>
+                        <td> 
+                        	<input type="hidden" id="pos_pmttech_org" name="pos_pmttech_org" class="inputboxes" value="#pos_pp#" maxlength="12" size="30">
+                            <input type="text" id="pos_pmttech" name="pos_pmttech" class="inputboxes" value="#pos_pp#" maxlength="12" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;EBT:</td>
+                        <td> 
+                        	<input type="hidden" id="pos_ebtfcs_org" name="pos_ebtfcs_org" class="inputboxes" value="#pos_eb#" maxlength="30" size="30">
+                            <input type="text" id="pos_ebtfcs" name="pos_ebtfcs" class="inputboxes" value="#pos_eb#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                                                   
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;ValueLink:</td>
+                        <td class="inputboxes">&nbsp;#pos_vc# 
+                        	<input type="hidden" id="pos_valuelink_org" name="pos_valuelink_org" class="inputboxes" value="#pos_vc#" maxlength="30" size="30">
+                        	<input type="hidden" id="pos_valuelink" name="pos_valuelink" class="inputboxes" value="#pos_vc#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Starbucks:</td>
+                        <td> 
+                        	<input type="hidden" id="pos_starbucks_org" name="pos_starbucks_org" class="inputboxes" value="#pos_sb#" maxlength="30" size="30">
+                            <input type="text" id="pos_starbucks" name="pos_starbucks" class="inputboxes" value="#pos_sb#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Telecheck:</td>
+                        <td> 
+                        	<input type="hidden" id="pos_telecheck_org" name="pos_telecheck_org" class="inputboxes" value="#pos_ck#" maxlength="30" size="30">
+                        	<input type="text" id="pos_telecheck" name="pos_telecheck" class="inputboxes" value="#pos_ck#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;WIC:</td>
+                        <td> 
+                        	<input type="hidden" id="pos_wic_org" name="pos_wic_org" class="inputboxes" value="#pos_wk#" maxlength="30" size="30">
+                        	<input type="text" id="pos_wic" name="pos_wic" class="inputboxes" value="#pos_wk#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;EWIC:</td>
+                        <td>
+                        	<input type="hidden" id="pos_ewic_org" name="pos_ewic_org" class="inputboxes" value="#pos_wc#" maxlength="30" size="30">
+                        	<input type="text" id="pos_ewic" name="pos_ewic" class="inputboxes" value="#pos_wc#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;EWIC Alternate:</td>
+                        <td>
+                        	<input type="hidden" id="pos_ewicalt_org" name="pos_ewicalt_org" class="inputboxes" value="#pos_w2#" maxlength="30" size="20">
+                            <input type="text" id="pos_ewicalt" name="pos_ewicalt" class="inputboxes" value="#pos_w2#" maxlength="30" size="20">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;PayVantage:</td>
+                        <td> 
+                        	<input type="hidden" id="pos_pv_org" name="pos_pv_org" class="inputboxes" value="#pos_pv#" maxlength="30" size="30">
+                        	<input type="text" id="pos_pv" name="pos_pv" class="inputboxes" value="#pos_pv#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Blackhawk:</td>
+                        <td class="inputboxes">&nbsp;#pos_bh# 
+                        	<input type="hidden" id="pos_bh_org" name="pos_bh_org" class="inputboxes" value="#pos_bh#" maxlength="30" size="30">
+                        	<input type="hidden" id="pos_bh" name="pos_bh" class="inputboxes" value="#pos_bh#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    </table>
+                    </div>                
+                </td>
+                
+                <td width="40%" valign="top">
+                    <div id="fuelDis" style="margin-left:15px; margin-top:10px; font-size:12px;" <cfif storeMidData.f_fuel EQ "Y">class=""<cfelse>class="hidden"</cfif>>
+                    <table width="100%" border="1" cellspacing="0" cellpadding="3" bordercolor="CCCCCC">
+                    <th colspan="2" bgcolor="##DCE7F3" align="left" height="25px" style="font-weight:bold;">&nbsp;Merchant ID Numbers: Fuel</strong></th>
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;ChasePaymentech:</td>
+                        <td> 
+                        	<input type="hidden" id="fuel_pmttech_org" name="fuel_pmttech_org" class="inputboxes" value="#fuel_pp#" maxlength="12" size="30">
+                            <input type="text" id="fuel_pmttech" name="fuel_pmttech" class="inputboxes" value="#fuel_pp#" maxlength="12" size="30">
+                        </td>
+                    </tr>
+                                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;ValueLink:</td>
+                        <td class="inputboxes">&nbsp;#fuel_vc# 
+                        	<input type="hidden" id="fuel_valuelink_org" name="fuel_valuelink_org" class="inputboxes" value="#fuel_vc#" maxlength="30" size="30">
+                            <input type="hidden" id="fuel_valuelink" name="fuel_valuelink" class="inputboxes" value="#fuel_vc#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    <tr style="height:25px;">
+                        <td class="fieldcontent2" bgcolor="F0F0F0">&nbsp;Starbucks:</td>
+                        <td> 
+                        	<input type="hidden" id="fuel_starbucks_org" name="fuel_starbucks_org" class="inputboxes" value="#fuel_sb#" maxlength="30" size="30">
+                            <input type="text" id="fuel_starbucks" name="fuel_starbucks" class="inputboxes" value="#fuel_sb#" maxlength="30" size="30">
+                        </td>
+                    </tr>
+                    
+                    </table>
+                    </div>
+                </td>
+                </tr>            
+                </table>  
+                
+                <div style="margin-left:15px; margin-top:10px; font-size:12px;">   
+                <table width="80%" border="0" cellspacing="1" cellpadding="1">
+                    <tr>
+                        <td align="right">
+                        	<cfswitch expression="#Trim(form.reqType)#"> 
+                                <cfcase value="N"> 
+                                    <cfset frmSubmitBtn = "Add Store">
+                                </cfcase>
+                                <cfcase value="U"> 
+                                    <cfset frmSubmitBtn = "Update Store">
+                                </cfcase>
+                                <cfcase value="C"> 
+                                    <cfset frmSubmitBtn = "Close Store">
+                                </cfcase>
+                            </cfswitch> 
+
+                            <!--<input type="reset" name="reset" value="Reset" style="width:90px; background-color:3E66AF; border-color:88ADDA; color:FFFFFF; cursor:pointer;" class="fieldcontent2">--->
+                            <cfif IsDefined("session.user.securityLVL") AND session.user.securityLVL EQ "Admin">
+                            	<cfif form.reqType EQ "V">
+                                	<input type="button" name="button" value="View Another Store" style="width:145px; background-color:##3E66AF; border-color:##88ADDA; color:##FFFFFF; cursor:pointer;" class="fieldcontent2" onClick="javascript:window.location.href='store_setup.html'">
+                                <cfelse>
+                                	<input type="submit" name="submit" value="#frmSubmitBtn#" style="width:125px; background-color:##3E66AF; border-color:##88ADDA; color:##FFFFFF; cursor:pointer;" class="fieldcontent2">
+                        		</cfif>
+                            <cfelse>
+                            	<input type="button" name="button" value="View Another Store" style="width:145px; background-color:##3E66AF; border-color:##88ADDA; color:##FFFFFF; cursor:pointer;" class="fieldcontent2" onClick="javascript:window.location.href='store_setup.html'">
+                            </cfif>
+                        </td>
+                    </tr>
+                </table>
+                </div>       
+            </cfoutput>
+        </cfif>
+ 		
+</div>
+</form>
+</body>
+
+<script language="JavaScript">
+function fuelDisplay(){
+		if((document.getElementById("fuelyn1").checked)){
+			document.getElementById("fuelDis").className = "";
+		}
+		else{
+			document.getElementById("fuelDis").className = "hidden";
+		}
+}
+</script>

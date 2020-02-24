@@ -1,0 +1,28 @@
+
+<cfoutput>
+    <div class="toolbar" style="height:35px; background-color:FFFFFF;">
+        <table width="100%" border=0>
+            <tr>
+                <td align="left" valign="top" width="33%"><div class="pagetitle" style="margin-left:15px; margin-top:5px; font-size:16px; color:006600;"><!---#SIlookupInfoData.f_processname#---></div></td>
+            
+                <td align="center" valign="top" width="32%">&nbsp;
+                &nbsp;
+                </td>
+            
+                <td align="right" valign="top" width="32%">
+                <cfif SIlookupInfoData.f_appdenycomments NEQ "">
+                    <div class="fieldcontent2b" style="margin-top:5px; margin-right:20%;">
+                        <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                        	<img src="../assets/images/dircomments.gif" align="absmiddle" alt="Director Comments" border="0" onmouseover="" style="cursor: pointer;" onClick="showComment();">&nbsp;Director's Comments
+                        <cfelse>
+                        	<img src="assets/images/dircomments.gif" align="absmiddle" alt="Director Comments" border="0" onmouseover="" style="cursor: pointer;" onClick="showComment();">&nbsp;Director's Comments
+                    	</cfif>
+                    </div>
+                <cfelse>
+                	&nbsp;
+                </cfif>
+                </td>
+            </tr>
+        </table>       
+    </div>
+</cfoutput>

@@ -1,0 +1,51 @@
+
+<cfoutput>
+    <div class="toolbar">
+        <table width="100%">
+        <tr>
+        <td class="fieldtitle10" align="left" width="50%">&nbsp;
+        	<cfif IsDefined("addNEW") AND addNEW EQ "ADD">
+            	<a href="##" onClick="addUserMain();"><img src="../assets/images/add.gif" height="14" width="14" class="icon" align="absmiddle" style="vertical-align:middle; margin-bottom:.25em;" alt="Add User">&nbsp;<label style="font-size:11px; color:000000;">Add User</label></a>          
+        	<cfelse>
+            	<a href="##" onClick="location.href='reqsearch_action.html'"><img src="../assets/images/back.gif" height="16" width="16" class="icon" align="absmiddle" alt="Back to Results">&nbsp;<label style="font-size:11px; color:000000;">Back to Results</label></a>
+                <a href="##" onClick="openLogView('#SSEinfoData.f_prikey#'); return false;"><img src="../assets/images/logfile.gif" height="16" width="16" class="icon" align="absmiddle" alt="View Log">&nbsp;<label style="font-size:11px; color:000000;">View Log</label></a>
+                <cfif SSEinfoData.f_reqstatus EQ "Denied by Director" OR SSEinfoData.f_reqstatus EQ "Awaiting Director Approval">
+                	<a href="##" onClick="openDirReq('#SSEinfoData.f_prikey#'); return false;"><img src="../assets/images/mail.gif" height="16" width="16" class="icon" align="absmiddle" alt="Send Director Email">&nbsp;<label style="font-size:11px; color:000000;">Request For Director Approval</label></a>
+                </cfif>
+                <!---<img src="../assets/images/today.gif" alt="Current date and time" align="absmiddle" />&nbsp;#DateFormat(Now(), "DDDD MMMM DD, YYYY")# #TimeFormat(Now(), "h:mm tt")#&nbsp;--->
+            </cfif>
+        </td>
+        
+        <td class="fieldtitle10" align="center" width="20%">&nbsp;
+        <cfif NOT IsDefined("hideAllMenus")>
+            <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                <cfif IsDefined("application.version") AND application.version EQ "Production">
+                	<label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:006600;">#UCASE(application.version)#</label>
+                <cfelse>
+                	<label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:FF0000;">TEST</label>
+                </cfif>
+            <cfelse>
+                <cfif IsDefined("application.version") AND application.version EQ "Production">
+                	<label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:006600;">#UCASE(application.version)#</label>
+                <cfelse>
+                	<label style="font-size:12px; font-weight:bold;">Environment:</label> <label style="font-size:12px; font-weight:bold; color:FF0000;">TEST</label>
+                </cfif>
+            </cfif>
+        </cfif>
+        </td>
+        
+        <td class="fieldtitle10" align="right" width="28%">
+        <cfif NOT IsDefined("hideAllMenus")>
+            <cfif IsDefined("altPathAdmin") AND altPathAdmin EQ "Y">
+                <img src="../assets/images/logout.gif" alt="Click to log off" align="absmiddle" border="0" style="cursor: pointer;" onclick="mylogout()"/>
+                <a href="#application.appurl#/logoff.html" style="cursor: pointer;"><font style="color:##000000; font-weight:bold;">Log Out</font></a>&nbsp;&nbsp;
+            <cfelse>
+                <img src="../assets/images/logout.gif" alt="Click to log off" align="absmiddle" border="0" style="cursor: pointer;" onclick="mylogout()"/>
+                <a href="#application.appurl#/logoff.html" style="cursor: pointer;"><font style="color:##000000; font-weight:bold;">Log Out</font></a>&nbsp;&nbsp;
+            </cfif>
+        </cfif>
+        </td>
+        </tr>
+        </table>       
+    </div>
+</cfoutput>
