@@ -1,7 +1,6 @@
 <CFHEADER NAME="Expires" VALUE="Mon, 06 Jan 1990 00:00:01 GMT">
 <CFHEADER NAME="Pragma" VALUE="no-cache">
 <CFHEADER NAME="cache-control" VALUE="no-cache">
-<cfheader name="Access-Control-Allow-Origin" value="*" />
 
 <cfset cssFiles[1] = "assets/styles/default.css"> 
 
@@ -10,11 +9,15 @@
 <cfset ArrayAppend(jsFiles, "speller/spellChecker.js")>
 
 <head>
+
 </head>
 
 <cfinvoke component="assets/functions/functions" method="storeDiv" returnvariable="storeDivData" />
 
-<body>             
+<body>
+
+
+  
 <form id="requestForm" name="requestForm" action="store_setup2.html" method="post" onSubmit="return storeFormReq();">
 <input type="hidden" name="HasChanges" value="false">
 <input type="hidden" name="submitType" value="">
@@ -37,7 +40,7 @@
         </cfif>
         
         <cfoutput>        	
-            <table width="98%" border="0">
+            <table width="" border="0">
             <tr>
             <td> 
                 <div style="margin-left:15px; margin-top:10px; font-size:12px;">
